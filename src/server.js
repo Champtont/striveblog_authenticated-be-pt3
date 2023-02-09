@@ -1,6 +1,8 @@
 import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
+import passport from "passport";
+import googleStrategy from "./lib/auth/google.js";
 import mongoose from "mongoose";
 import blogsRouter from "./api/blogs/index.js";
 import authorsRouter from "./api/authors/index.js";
@@ -13,9 +15,12 @@ import {
 const server = express();
 const port = process.env.PORT || 3002;
 
+passport.use("google", googleStrategy);
+
 // MIDDLEWARES
 server.use(cors());
 server.use(express.json());
+server.use(passport.initialize());
 
 //  ENDPOINTS
 server.use("/blogs", blogsRouter);

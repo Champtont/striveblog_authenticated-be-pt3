@@ -1,5 +1,6 @@
 import express from "express";
 import createHttpError from "http-errors";
+import passport from "passport";
 import { adminOnlyMiddleware } from "../../lib/auth/adminOnly.js";
 import { JWTAuthMiddleware } from "../../lib/auth/jwtAuth.js";
 import { createAccessToken } from "../../lib/auth/tools.js";
@@ -28,6 +29,21 @@ authorsRouter.get(
     } catch (error) {
       next(error);
     }
+  }
+);
+
+authorsRouter.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+// The purpose of this endpoint is to redirect users to Google Consent Screen
+
+authorsRouter.get(
+  "/googleRedirect",
+  passport.authenticate("google", { session: false }),
+  async (req, res, next) => {
+    console.log(req.user);
+    res.redirect(`${process.env.FE_URL}?accessToken=${req.user.accessToken}`);
   }
 );
 
