@@ -32,18 +32,18 @@ authorsRouter.get(
   }
 );
 
+//googleEnd points
 authorsRouter.get(
   "/googleLogin",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
-// The purpose of this endpoint is to redirect users to Google Consent Screen
 
 authorsRouter.get(
   "/googleRedirect",
   passport.authenticate("google", { session: false }),
   async (req, res, next) => {
     console.log(req.user);
-    res.redirect(`${process.env.FE_URL}?accessToken=${req.user.accessToken}`);
+    res.send({ accessToken: req.user.accessToken });
   }
 );
 
